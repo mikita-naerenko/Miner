@@ -1,66 +1,36 @@
-## Foundry
+# Miner Smart Contract — Deployment Guide
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Step 1 — Build the Contracts
+forge build
 
-Foundry consists of:
+## Step 2 — Local Test Deployment (optional)
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+You can simulate deployment in a local environment first:
 
-## Documentation
+forge script script/DeployMinerScript.s.sol --fork-url http://127.0.0.1:8545
 
-https://book.getfoundry.sh/
+## Step 3 — Deploy to a Real Network
 
-## Usage
+To broadcast the deployment:
 
-### Build
+forge script script/DeployMinerScript.s.sol \
+  --rpc-url $RPC_URL \
+  --private-key $PRIVATE_KEY \
+  --broadcast \
+  --verify
 
-```shell
-$ forge build
-```
+### Example:
 
-### Test
+export RPC_URL="https://eth-sepolia.g.alchemy.com/v2/<YOUR_KEY>"
+export PRIVATE_KEY="0xYOUR_PRIVATE_KEY"
 
-```shell
-$ forge test
-```
+forge script script/DeployMinerScript.s.sol \
+  --rpc-url $RPC_URL \
+  --private-key $PRIVATE_KEY \
+  --broadcast \
+  --verify
 
-### Format
+##  Step 4 — Verify Deployment
+forge verify-contract <DEPLOYED_ADDRESS> src/Miner.sol:Miner --chain-id <CHAIN_ID> --watch
+forge verify-contract 0xYourContractAddress src/Miner.sol:Miner --chain-id 11155111 --watch
 
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
